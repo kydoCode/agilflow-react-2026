@@ -142,26 +142,12 @@ export default function Dashboard() {
                 Bienvenue, {user?.name} <span className="text-[#0D8B7D] text-xs sm:text-sm">({user?.role})</span>
               </p>
             </div>
-            <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
-              <button
-                onClick={() => navigate('/profile')}
-                className="glass-button text-sm sm:text-base min-h-[44px] px-3 sm:px-4"
-              >
-                Profile
-              </button>
-              <button
-                onClick={() => setShowModal(true)}
-                className="flex-1 sm:flex-none bg-[#0D8B7D] text-white rounded-xl px-3 sm:px-4 py-2 text-sm sm:text-base font-semibold hover:bg-[#0c7a6d] transition-all min-h-[44px]"
-              >
-                + Add Task
-              </button>
-              <button
-                onClick={handleLogout}
-                className="glass-button text-sm sm:text-base min-h-[44px]"
-              >
-                Log out
-              </button>
-            </div>
+            <button
+              onClick={() => setShowModal(true)}
+              className="w-full sm:w-auto bg-[#0D8B7D] text-white rounded-xl px-3 sm:px-4 py-2 text-sm sm:text-base font-semibold hover:bg-[#0c7a6d] transition-all min-h-[44px]"
+            >
+              + Add Task
+            </button>
           </div>
         </div>
 
@@ -322,6 +308,9 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+      </main>
+      
+      <Footer />
     </div>
   );
 }
@@ -366,9 +355,6 @@ function StoryCard({ story, onEdit, onDelete, getPriorityColor }) {
           </button>
         </div>
       </div>
-    </main>
-    
-    <Footer />
-  </div>
+    </div>
   );
 }
