@@ -7,6 +7,7 @@ export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('teammate');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ export default function Register() {
     setLoading(true);
 
     try {
-      const data = await api.register(name, email, password);
+      const data = await api.register(name, email, password, role);
       setAuth(data.user, data.token);
       navigate('/dashboard');
     } catch (err) {
@@ -68,6 +69,22 @@ export default function Register() {
               minLength="6"
               required
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2">Rôle</label>
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="glass-input w-full"
+            >
+              <option value="teammate">Teammate</option>
+              <option value="developer">Developer</option>
+              <option value="tester">Tester</option>
+              <option value="product owner">Product Owner</option>
+              <option value="scrum master">Scrum Master</option>
+              <option value="administrator">Administrator</option>
+            </select>
           </div>
 
           {error && (

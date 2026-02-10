@@ -1,11 +1,11 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 const api = {
-  async register(name, email, password) {
+  async register(name, email, password, role) {
     const res = await fetch(`${API_URL}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password })
+      body: JSON.stringify({ name, email, password, role })
     });
     if (!res.ok) throw new Error(await res.text());
     return res.json();

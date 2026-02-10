@@ -81,7 +81,7 @@ export default function Dashboard() {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
               <h1 className="text-2xl md:text-3xl font-bold">Dashboard</h1>
-              <p className="text-white/60 mt-1">Bienvenue, {user?.name}</p>
+              <p className="text-white/60 mt-1">Bienvenue, {user?.name} <span className="text-primary-light text-sm">({user?.role})</span></p>
             </div>
             <div className="flex gap-3">
               <button
