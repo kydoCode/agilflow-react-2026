@@ -30,9 +30,12 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="glass-card w-full max-w-md p-8">
-        <h1 className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-          AgilFlow
-        </h1>
+        <div className="flex items-center justify-center gap-3 mb-8">
+          <img src="/logo.webp" alt="AgilFlow" className="w-10 h-10 sm:w-12 sm:h-12" />
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">
+            AgilFlow
+          </h1>
+        </div>
         
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
@@ -66,7 +69,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-primary/20 border border-primary/30 text-primary-light rounded-xl px-4 py-3 font-medium hover:bg-primary/30 transition-all disabled:opacity-50"
+            className="w-full bg-primary/40 border border-primary/50 text-white rounded-xl px-4 py-3 font-medium hover:bg-primary/50 transition-all disabled:opacity-50 min-h-[44px]"
           >
             {loading ? 'Connexion...' : 'Se connecter'}
           </button>
