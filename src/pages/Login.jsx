@@ -69,7 +69,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-primary/40 border border-primary/50 text-white rounded-xl px-4 py-3 font-medium hover:bg-primary/50 transition-all disabled:opacity-50 min-h-[44px]"
+            className="w-full bg-primary text-white rounded-xl px-4 py-3 font-semibold hover:bg-primary-dark transition-all disabled:opacity-50 min-h-[44px]"
           >
             {loading ? 'Connexion...' : 'Se connecter'}
           </button>

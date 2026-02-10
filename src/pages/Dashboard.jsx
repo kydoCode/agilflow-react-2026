@@ -107,7 +107,7 @@ export default function Dashboard() {
             <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
               <button
                 onClick={() => setShowModal(true)}
-                className="flex-1 sm:flex-none bg-[#0D8B7D]/20 border border-[#0D8B7D]/30 text-[#0D8B7D] rounded-xl px-3 sm:px-4 py-2 text-sm sm:text-base hover:bg-[#0D8B7D]/30 transition-all min-h-[44px]"
+                className="flex-1 sm:flex-none bg-[#0D8B7D] text-white rounded-xl px-3 sm:px-4 py-2 text-sm sm:text-base font-semibold hover:bg-[#0c7a6d] transition-all min-h-[44px]"
               >
                 + Add Task
               </button>
@@ -234,7 +234,7 @@ export default function Dashboard() {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 bg-[#0D8B7D]/20 border border-[#0D8B7D]/30 text-[#0D8B7D] rounded-xl px-4 py-2 hover:bg-[#0D8B7D]/30 transition-all min-h-[44px]"
+                  className="flex-1 bg-[#0D8B7D] text-white rounded-xl px-4 py-2 font-semibold hover:bg-[#0c7a6d] transition-all min-h-[44px]"
                 >
                   {editId ? 'Save' : 'Add'}
                 </button>
