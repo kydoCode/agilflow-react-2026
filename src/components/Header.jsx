@@ -13,30 +13,30 @@ export default function Header() {
   return (
     <header className="glass-card sticky top-0 z-50 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
-        <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center justify-between gap-2">
+          <Link to="/" className="flex items-center gap-2 shrink-0">
             <img src="/logo.webp" alt="AgilFlow" className="w-8 h-8 sm:w-10 sm:h-10" />
-            <span className="text-lg sm:text-xl font-bold text-white">AgilFlow</span>
+            <span className="text-base sm:text-lg md:text-xl font-bold text-white hidden xs:inline">AgilFlow</span>
           </Link>
 
-          <nav className="flex items-center gap-2 sm:gap-4">
+          <nav className="flex items-center gap-1 sm:gap-2 md:gap-4">
             {user ? (
               <>
                 <Link
                   to="/dashboard"
-                  className="glass-button text-sm sm:text-base px-3 sm:px-4 py-2 min-h-[44px]"
+                  className="glass-button text-xs sm:text-sm md:text-base px-2 sm:px-3 md:px-4 py-2 min-h-[44px] flex items-center justify-center"
                 >
                   Dashboard
                 </Link>
                 <Link
                   to="/profile"
-                  className="glass-button text-sm sm:text-base px-3 sm:px-4 py-2 min-h-[44px]"
+                  className="glass-button text-xs sm:text-sm md:text-base px-2 sm:px-3 md:px-4 py-2 min-h-[44px] flex items-center justify-center"
                 >
                   Profile
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="glass-button text-sm sm:text-base px-3 sm:px-4 py-2 min-h-[44px]"
+                  className="glass-button text-xs sm:text-sm md:text-base px-2 sm:px-3 md:px-4 py-2 min-h-[44px] flex items-center justify-center whitespace-nowrap"
                 >
                   Log out
                 </button>
@@ -45,13 +45,13 @@ export default function Header() {
               <>
                 <Link
                   to="/login"
-                  className="glass-button text-sm sm:text-base px-3 sm:px-4 py-2 min-h-[44px]"
+                  className="glass-button text-xs sm:text-sm md:text-base px-2 sm:px-3 md:px-4 py-2 min-h-[44px] flex items-center justify-center"
                 >
                   Log in
                 </Link>
                 <Link
                   to="/register"
-                  className="bg-primary text-white rounded-xl px-3 sm:px-4 py-2 text-sm sm:text-base font-semibold hover:bg-primary-dark transition-all min-h-[44px]"
+                  className="bg-primary text-white rounded-xl px-2 sm:px-3 md:px-4 py-2 text-xs sm:text-sm md:text-base font-semibold hover:bg-primary-dark transition-all min-h-[44px] flex items-center justify-center"
                 >
                   Register
                 </Link>

@@ -70,22 +70,22 @@ export default function Landing() {
           </div>
 
           {/* Features */}
-          <div className="mt-16 sm:mt-20 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
-            <div className="glass-card p-6">
-              <h3 className="text-lg sm:text-xl font-bold text-white mb-3">Kanban Board</h3>
-              <p className="text-white/70 text-sm sm:text-base">
+          <div className="mt-12 sm:mt-16 md:mt-20 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+            <div className="glass-card p-4 sm:p-6">
+              <h3 className="text-base sm:text-lg md:text-xl font-bold text-white mb-2 sm:mb-3">Kanban Board</h3>
+              <p className="text-white/70 text-xs sm:text-sm md:text-base">
                 Visualisez vos User Stories en colonnes Todo, Doing, Done
               </p>
             </div>
-            <div className="glass-card p-6">
-              <h3 className="text-lg sm:text-xl font-bold text-white mb-3">Collaboration</h3>
-              <p className="text-white/70 text-sm sm:text-base">
+            <div className="glass-card p-4 sm:p-6">
+              <h3 className="text-base sm:text-lg md:text-xl font-bold text-white mb-2 sm:mb-3">Collaboration</h3>
+              <p className="text-white/70 text-xs sm:text-sm md:text-base">
                 Travaillez en équipe avec des rôles définis
               </p>
             </div>
-            <div className="glass-card p-6">
-              <h3 className="text-lg sm:text-xl font-bold text-white mb-3">Simplicité</h3>
-              <p className="text-white/70 text-sm sm:text-base">
+            <div className="glass-card p-4 sm:p-6">
+              <h3 className="text-base sm:text-lg md:text-xl font-bold text-white mb-2 sm:mb-3">Simplicité</h3>
+              <p className="text-white/70 text-xs sm:text-sm md:text-base">
                 Interface intuitive et moderne pour tous
               </p>
             </div>

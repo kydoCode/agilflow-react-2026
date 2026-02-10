@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
 import api from '../services/api';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 export default function Profile() {
   const { user, token, logout } = useAuthStore();
@@ -67,7 +69,10 @@ export default function Profile() {
   };
 
   return (
-    <div className="min-h-screen px-4 py-6 sm:p-8">
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      
+      <main className="flex-1 px-4 py-6 sm:p-8">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="glass-card p-4 sm:p-6 mb-6">
@@ -207,6 +212,9 @@ export default function Profile() {
           </button>
         </div>
       </div>
-    </div>
+    </main>
+    
+    <Footer />
+  </div>
   );
 }

@@ -7,7 +7,13 @@ export default function Dashboard() {
   const [stories, setStories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [formData, setFormData] = useState({ title: '', description: '', priority: 'Medium', status: 'Todo' });
+  const [formData, setFormData] = useState({ 
+    asA: '',
+    iWant: '', 
+    soThat: '',
+    priority: 'Medium', 
+    status: 'Todo' 
+  });
   const [editId, setEditId] = useState(null);
   
   const { user, token, logout } = useAuthStore();
@@ -19,7 +25,18 @@ export default function Dashboard() {
       return;
     }
     loadStories();
-  }, [token, navigate]);
+
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && showModal) {
+        setShowModal(false);
+        setEditId(null);
+        setFormData({ asA: '', iWant: '', soThat: '', priority: 'Medium', status: 'Todo' });
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [token, navigate, showModal]);
 
   const loadStories = async () => {
     try {
@@ -35,13 +52,20 @@ export default function Dashboard() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const payload = {
+        title: `En tant que ${formData.asA}, je veux ${formData.iWant}`,
+        description: `Afin de ${formData.soThat}`,
+        priority: formData.priority,
+        status: formData.status
+      };
+      
       if (editId) {
-        await api.updateUserStory(token, editId, formData);
+        await api.updateUserStory(token, editId, payload);
       } else {
-        await api.createUserStory(token, formData);
+        await api.createUserStory(token, payload);
       }
       setShowModal(false);
-      setFormData({ title: '', description: '', priority: 'Medium', status: 'Todo' });
+      setFormData({ asA: '', iWant: '', soThat: '', priority: 'Medium', status: 'Todo' });
       setEditId(null);
       loadStories();
     } catch (err) {
@@ -50,7 +74,16 @@ export default function Dashboard() {
   };
 
   const handleEdit = (story) => {
-    setFormData({ title: story.title, description: story.description, priority: story.priority, status: story.status });
+    const asAMatch = story.title.match(/En tant que (.+?), je veux (.+)/);
+    const soThatMatch = story.description?.match(/Afin de (.+)/);
+    
+    setFormData({ 
+      asA: asAMatch ? asAMatch[1] : '',
+      iWant: asAMatch ? asAMatch[2] : story.title,
+      soThat: soThatMatch ? soThatMatch[1] : story.description || '',
+      priority: story.priority, 
+      status: story.status 
+    });
     setEditId(story.id);
     setShowModal(true);
   };
@@ -172,29 +205,64 @@ export default function Dashboard() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="glass-card w-full max-w-lg p-4 sm:p-6">
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowModal(false);
+              setEditId(null);
+              setFormData({ asA: '', iWant: '', soThat: '', priority: 'Medium', status: 'Todo' });
+            }
+          }}
+        >
+          <div className="glass-card w-full max-w-lg p-4 sm:p-6 relative">
+            <button
+              onClick={() => {
+                setShowModal(false);
+                setEditId(null);
+                setFormData({ asA: '', iWant: '', soThat: '', priority: 'Medium', status: 'Todo' });
+              }}
+              className="absolute top-4 right-4 text-white/60 hover:text-white text-2xl leading-none"
+              aria-label="Fermer"
+            >
+              ×
+            </button>
             <h2 className="text-lg sm:text-xl font-bold mb-4">{editId ? 'Modifier' : 'Nouvelle'} User Story</h2>
             
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-2">Titre</label>
+                <label className="block text-sm font-medium mb-2">En tant que</label>
                 <input
                   type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData({...formData, title: e.target.value})}
+                  value={formData.asA}
+                  onChange={(e) => setFormData({...formData, asA: e.target.value})}
                   className="glass-input w-full"
+                  placeholder="utilisateur, admin, développeur..."
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Description</label>
+                <label className="block text-sm font-medium mb-2">Je veux</label>
                 <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
-                  className="glass-input w-full min-h-[100px]"
-                  rows="4"
+                  value={formData.iWant}
+                  onChange={(e) => setFormData({...formData, iWant: e.target.value})}
+                  className="glass-input w-full min-h-[80px]"
+                  placeholder="pouvoir me connecter, créer des tâches..."
+                  rows="3"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Afin de</label>
+                <textarea
+                  value={formData.soThat}
+                  onChange={(e) => setFormData({...formData, soThat: e.target.value})}
+                  className="glass-input w-full min-h-[80px]"
+                  placeholder="accéder à mon compte, organiser mon travail..."
+                  rows="3"
+                  required
                 />
               </div>
 
@@ -232,7 +300,7 @@ export default function Dashboard() {
                   onClick={() => {
                     setShowModal(false);
                     setEditId(null);
-                    setFormData({ title: '', description: '', priority: 'Medium', status: 'Todo' });
+                    setFormData({ asA: '', iWant: '', soThat: '', priority: 'Medium', status: 'Todo' });
                   }}
                   className="flex-1 glass-button min-h-[44px]"
                 >

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
 import api from '../services/api';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -28,7 +30,10 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      
+      <main className="flex-1 flex items-center justify-center p-4">
       <div className="glass-card w-full max-w-md p-8">
         <div className="flex items-center justify-center gap-3 mb-8">
           <img src="/logo.webp" alt="AgilFlow" className="w-10 h-10 sm:w-12 sm:h-12" />
@@ -82,6 +87,9 @@ export default function Login() {
           </Link>
         </p>
       </div>
-    </div>
+    </main>
+    
+    <Footer />
+  </div>
   );
 }
