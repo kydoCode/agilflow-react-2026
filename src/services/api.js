@@ -62,6 +62,19 @@ const api = {
     });
     if (!res.ok) throw new Error(await res.text());
     return res.json();
+  },
+
+  async changePassword(token, oldPassword, newPassword) {
+    const res = await fetch(`${API_URL}/auth/change-password`, {
+      method: 'PUT',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` 
+      },
+      body: JSON.stringify({ oldPassword, newPassword })
+    });
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
   }
 };
 
