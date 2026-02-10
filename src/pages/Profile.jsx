@@ -43,7 +43,10 @@ export default function Profile() {
       setOldPassword('');
       setNewPassword('');
       setConfirmPassword('');
-      setShowPasswordForm(false);
+      setTimeout(() => {
+        setShowPasswordForm(false);
+        setSuccess('');
+      }, 2000);
     } catch (err) {
       setError('Erreur lors du changement de mot de passe');
     } finally {
