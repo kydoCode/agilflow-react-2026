@@ -1,8 +1,8 @@
-# 🎨 AgilFlow Frontend
+# AgilFlow Frontend
 
 Application React moderne avec design glassmorphique pour la gestion de User Stories.
 
-## 🚀 Stack Technique
+## Stack Technique
 
 - **Framework** : React 18
 - **Build** : Vite 7
@@ -11,13 +11,13 @@ Application React moderne avec design glassmorphique pour la gestion de User Sto
 - **Routing** : React Router 7
 - **HTTP** : Fetch API
 
-## 📦 Installation
+## Installation
 
 ```bash
 npm install
 ```
 
-## ⚙️ Configuration
+## Configuration
 
 ```bash
 cp .env.example .env
@@ -28,7 +28,7 @@ cp .env.example .env
 VITE_API_URL=http://localhost:3000/api
 ```
 
-## 🏃 Développement
+## Développement
 
 ```bash
 npm run dev
@@ -36,19 +36,20 @@ npm run dev
 
 App disponible sur `http://localhost:5173`
 
-## 🏗️ Build Production
+## Build Production
 
 ```bash
 npm run build
 npm run preview
 ```
 
-## 🎨 Design System
+## Design System
 
 ### Palette Couleurs
-- **Primaire** : Bleu (#3B82F6)
-- **Accent** : Vert (#10B981)
-- **Neutre** : Gris (#64748B)
+- **Gradient** : #020B2D → #123363 → #0D8B7D
+- **Primaire** : #0D8B7D (Vert Agile)
+- **Secondaire** : #123363 (Bleu profond)
+- **Background** : Gradient fixe
 
 ### Classes Glassmorphiques
 - `.glass-card` - Cartes avec effet verre
@@ -56,54 +57,69 @@ npm run preview
 - `.glass-input` - Inputs avec backdrop-blur
 
 ### Responsive
-- Mobile-first
+- Mobile-first (320px minimum)
 - Breakpoints : 640px, 768px, 1024px
-- WCAG 2.1 compliant (320px @ 200% zoom)
+- WCAG 2.1 AA compliant (320px @ 200% zoom)
+- Boutons minimum 44px hauteur
 
-## 📁 Structure
+## Structure
 
 ```
 front/
 ├── src/
-│   ├── pages/           # Pages (Login, Register, Dashboard)
-│   ├── components/      # Composants réutilisables
-│   ├── store/           # Zustand stores
-│   ├── services/        # API calls
+│   ├── pages/           # Pages (Landing, Login, Register, Dashboard, Profile, Legal, Privacy)
+│   ├── components/      # Composants réutilisables (Header, Footer)
+│   ├── store/           # Zustand stores (authStore)
+│   ├── services/        # API calls (api.js)
 │   ├── App.jsx          # Router principal
 │   └── main.jsx         # Point d'entrée
-├── public/
+├── public/              # Assets statiques (logo, favicon)
 └── package.json
 ```
 
-## 🔐 Authentification
+## Authentification
 
 - JWT stocké dans localStorage (Zustand persist)
-- Routes protégées avec ProtectedRoute
+- Routes protégées avec navigation conditionnelle
 - Auto-redirect si non authentifié
+- 6 rôles Agile : Product Owner, Scrum Master, Developer, Tester, Designer, Stakeholder
 
-## 🚀 Déploiement Vercel
+## Déploiement Vercel
 
 1. Créer projet Vercel
 2. Connecter repo GitHub
-3. Ajouter `VITE_API_URL` dans variables
-4. Deploy automatique sur push
+3. Ajouter `VITE_API_URL` dans variables d'environnement
+4. Deploy automatique sur push main
 
-## 📝 Scripts
+## Scripts
 
 - `npm run dev` - Serveur développement
 - `npm run build` - Build production
 - `npm run preview` - Preview build local
 - `npm run lint` - Linter ESLint
 
-## 🎯 Fonctionnalités
+## Fonctionnalités v1.0.0
 
-- ✅ Authentification (Login/Register)
-- ✅ CRUD User Stories
-- ✅ Dashboard avec filtres
-- ✅ Design glassmorphique responsive
-- ✅ Toast notifications
-- ✅ Loading states
+- Authentification (Login/Register) avec sélection rôle
+- CRUD User Stories format Agile ("En tant que... je veux... afin de...")
+- Kanban Board 3 colonnes (Todo/Doing/Done)
+- Tri par priorité (High/Medium/Low)
+- Modal création/édition avec fermeture ESC/click/croix
+- Profile utilisateur avec changement mot de passe
+- Pages légales (Mentions légales, Politique de confidentialité)
+- Design glassmorphique responsive 320px+
+- Header/Footer sur toutes les pages
 
-## 📄 Licence
+## Roadmap v1.1.0
 
-Projet formation DWWM 2025
+- Drag & Drop Kanban
+- Filtres et recherche User Stories
+- Notifications toast
+- Export/Import JSON/CSV
+- Stats avec timer et burndown charts
+- Messagerie collaboration
+- Dark/Light Mode toggle
+
+## Licence
+
+Projet formation DWWM 2025 - kydoCode
