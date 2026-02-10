@@ -19,7 +19,7 @@ export default {
         }
       },
       backgroundImage: {
-        'agilflow': 'linear-gradient(135deg, #051937 0%, #06334d 50%, #0c5a70 100%)',
+        'agilflow': 'linear-gradient(135deg, #0c5a70 0%, #06334d 50%, #051937 100%)',
       },
       backdropBlur: {
         xs: '2px',
