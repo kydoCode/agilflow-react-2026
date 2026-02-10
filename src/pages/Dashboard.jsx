@@ -322,6 +322,9 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+      </main>
+      
+      <Footer />
     </div>
   );
 }
@@ -366,9 +369,6 @@ function StoryCard({ story, onEdit, onDelete, getPriorityColor }) {
           </button>
         </div>
       </div>
-    </main>
-    
-    <Footer />
-  </div>
+    </div>
   );
 }
