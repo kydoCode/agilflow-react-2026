@@ -1,16 +1,109 @@
-# React + Vite
+# 🎨 AgilFlow Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Application React moderne avec design glassmorphique pour la gestion de User Stories.
 
-Currently, two official plugins are available:
+## 🚀 Stack Technique
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Framework** : React 18
+- **Build** : Vite 7
+- **Styling** : TailwindCSS (Glassmorphisme)
+- **State** : Zustand
+- **Routing** : React Router 7
+- **HTTP** : Fetch API
 
-## React Compiler
+## 📦 Installation
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+```
 
-## Expanding the ESLint configuration
+## ⚙️ Configuration
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+cp .env.example .env
+```
+
+Éditer `.env` :
+```env
+VITE_API_URL=http://localhost:3000/api
+```
+
+## 🏃 Développement
+
+```bash
+npm run dev
+```
+
+App disponible sur `http://localhost:5173`
+
+## 🏗️ Build Production
+
+```bash
+npm run build
+npm run preview
+```
+
+## 🎨 Design System
+
+### Palette Couleurs
+- **Primaire** : Bleu (#3B82F6)
+- **Accent** : Vert (#10B981)
+- **Neutre** : Gris (#64748B)
+
+### Classes Glassmorphiques
+- `.glass-card` - Cartes avec effet verre
+- `.glass-button` - Boutons glassmorphiques
+- `.glass-input` - Inputs avec backdrop-blur
+
+### Responsive
+- Mobile-first
+- Breakpoints : 640px, 768px, 1024px
+- WCAG 2.1 compliant (320px @ 200% zoom)
+
+## 📁 Structure
+
+```
+front/
+├── src/
+│   ├── pages/           # Pages (Login, Register, Dashboard)
+│   ├── components/      # Composants réutilisables
+│   ├── store/           # Zustand stores
+│   ├── services/        # API calls
+│   ├── App.jsx          # Router principal
+│   └── main.jsx         # Point d'entrée
+├── public/
+└── package.json
+```
+
+## 🔐 Authentification
+
+- JWT stocké dans localStorage (Zustand persist)
+- Routes protégées avec ProtectedRoute
+- Auto-redirect si non authentifié
+
+## 🚀 Déploiement Vercel
+
+1. Créer projet Vercel
+2. Connecter repo GitHub
+3. Ajouter `VITE_API_URL` dans variables
+4. Deploy automatique sur push
+
+## 📝 Scripts
+
+- `npm run dev` - Serveur développement
+- `npm run build` - Build production
+- `npm run preview` - Preview build local
+- `npm run lint` - Linter ESLint
+
+## 🎯 Fonctionnalités
+
+- ✅ Authentification (Login/Register)
+- ✅ CRUD User Stories
+- ✅ Dashboard avec filtres
+- ✅ Design glassmorphique responsive
+- ✅ Toast notifications
+- ✅ Loading states
+
+## 📄 Licence
+
+Projet formation DWWM 2025
