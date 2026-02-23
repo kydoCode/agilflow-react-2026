@@ -69,6 +69,21 @@ export default function Landing() {
             )}
           </div>
 
+          {/* Promo Video */}
+          <div className="mt-12 sm:mt-16">
+            <div className="glass-card p-2 sm:p-3 overflow-hidden">
+              <div style={{ padding: '56.25% 0 0 0', position: 'relative' }}>
+                <iframe
+                  src="https://player.vimeo.com/video/1167232498?badge=0&autopause=0&player_id=0&app_id=58479"
+                  frameBorder="0"
+                  allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+                  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+                  title="AgilFlow - Présentation"
+                />
+              </div>
+            </div>
+          </div>
+
           {/* Features */}
           <div className="mt-12 sm:mt-16 md:mt-20 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             <div className="glass-card p-4 sm:p-6">
