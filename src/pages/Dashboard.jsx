@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import {
   DndContext,
@@ -71,7 +72,7 @@ function StoryCard({ story, onEdit, onDelete, isDragging }) {
 
 function KanbanColumn({ column, stories, onEdit, onDelete, activeId }) {
   return (
-    <div className="flex flex-col min-w-[220px] flex-1">
+    <div className="flex flex-col">
       <div className="glass-card p-3 mb-3">
         <h2 className={`text-sm font-bold ${column.color}`}>{column.label}</h2>
         <span className="text-xs text-white/40">{stories.length}</span>
@@ -136,22 +137,24 @@ export default function Dashboard() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const payload = {
+      title: `En tant que ${formData.asA}, je veux ${formData.iWant}`,
+      description: `Afin de ${formData.soThat}`,
+      priority: formData.priority,
+      status: formData.status
+    };
     try {
-      const payload = {
-        title: `En tant que ${formData.asA}, je veux ${formData.iWant}`,
-        description: `Afin de ${formData.soThat}`,
-        priority: formData.priority,
-        status: formData.status
-      };
       if (editId) {
         await api.updateUserStory(token, editId, payload);
+        toast.success('User Story modifiée');
       } else {
         await api.createUserStory(token, payload);
+        toast.success('User Story créée');
       }
       closeModal();
       loadStories();
     } catch (err) {
-      console.error(err);
+      toast.error('Erreur lors de la sauvegarde');
     }
   };
 
@@ -173,9 +176,10 @@ export default function Dashboard() {
     if (!confirm('Supprimer cette User Story ?')) return;
     try {
       await api.deleteUserStory(token, id);
+      toast.success('User Story supprimée');
       loadStories();
     } catch (err) {
-      console.error(err);
+      toast.error('Erreur lors de la suppression');
     }
   };
 
@@ -201,8 +205,7 @@ export default function Dashboard() {
     try {
       await api.updateStoryStatus(token, active.id, targetStatus, 0);
     } catch (err) {
-      console.error(err);
-      // Rollback
+      toast.error('Erreur lors du déplacement');
       loadStories();
     }
   };
@@ -236,7 +239,7 @@ export default function Dashboard() {
           </div>
 
           <DndContext sensors={sensors} collisionDetection={closestCorners} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-            <div className="flex gap-4 overflow-x-auto pb-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 pb-4">
               {COLUMNS.map(col => (
                 <KanbanColumn
                   key={col.id}
