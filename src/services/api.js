@@ -55,6 +55,19 @@ const api = {
     return res.json();
   },
 
+  async updateStoryStatus(token, id, status, position) {
+    const res = await fetch(`${API_URL}/userstories/${id}/status`, {
+      method: 'PATCH',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` 
+      },
+      body: JSON.stringify({ status, position })
+    });
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
+  },
+
   async deleteUserStory(token, id) {
     const res = await fetch(`${API_URL}/userstories/${id}`, {
       method: 'DELETE',
