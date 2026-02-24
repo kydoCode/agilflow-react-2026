@@ -62,9 +62,9 @@ function StoryCard({ story, onEdit, onDelete, isDragging }) {
         <p className="text-xs text-white/50 mb-3 break-words line-clamp-2">{story.description}</p>
       )}
 
-      <div className="flex gap-2">
-        <button onClick={() => onEdit(story)} className="flex-1 glass-button text-xs min-h-[36px]">Edit</button>
-        <button onClick={() => onDelete(story.id)} className="flex-1 bg-red-500/20 border border-red-500/30 text-red-400 rounded-xl px-3 py-1 text-xs hover:bg-red-500/30 transition-all min-h-[36px]">Delete</button>
+      <div className="flex flex-col gap-2">
+        <button onClick={() => onEdit(story)} className="w-full glass-button text-xs min-h-[36px]">Edit</button>
+        <button onClick={() => onDelete(story.id)} className="w-full bg-red-500/20 border border-red-500/30 text-red-400 rounded-xl px-3 py-1 text-xs hover:bg-red-500/30 transition-all min-h-[36px]">Delete</button>
       </div>
     </div>
   );
