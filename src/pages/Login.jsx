@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
 import api from '../services/api';
 import { loginSchema } from '../schemas/auth.schema';
+import { analytics } from '../analytics';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -30,6 +31,7 @@ export default function Login() {
     try {
       const data = await api.login(email, password);
       setAuth(data.user, data.token);
+      analytics.login();
       navigate('/dashboard');
     } catch (err) {
       setErrors({ global: 'Email ou mot de passe incorrect' });
@@ -51,33 +53,41 @@ export default function Login() {
           </h1>
         </div>
         
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6" noValidate>
           <div>
-            <label className="block text-sm font-medium mb-2">Email</label>
+            <label htmlFor="email" className="block text-sm font-medium mb-2">Email</label>
             <input
+              id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="glass-input w-full"
+              autoComplete="email"
+              aria-describedby={errors.email ? 'email-error' : undefined}
+              aria-invalid={!!errors.email}
               required
             />
-            {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email}</p>}
+            {errors.email && <p id="email-error" className="text-red-400 text-xs mt-1" role="alert">{errors.email}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">Mot de passe</label>
+            <label htmlFor="password" className="block text-sm font-medium mb-2">Mot de passe</label>
             <input
+              id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="glass-input w-full"
+              autoComplete="current-password"
+              aria-describedby={errors.password ? 'password-error' : undefined}
+              aria-invalid={!!errors.password}
               required
             />
-            {errors.password && <p className="text-red-400 text-xs mt-1">{errors.password}</p>}
+            {errors.password && <p id="password-error" className="text-red-400 text-xs mt-1" role="alert">{errors.password}</p>}
           </div>
 
           {errors.global && (
-            <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3 text-sm">
+            <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3 text-sm" role="alert">
               {errors.global}
             </div>
           )}
