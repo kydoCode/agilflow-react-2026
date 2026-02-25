@@ -50,6 +50,7 @@ function StoryCard({ story, onEdit, onDelete, isDragging }) {
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.4 : 1 }}
       className="relative group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 shadow-2xl hover:border-white/20 hover:bg-white/10 transition-all"
+      role="listitem"
     >
       <div className="flex justify-between items-start gap-2 mb-3">
         <span className="text-[10px] uppercase tracking-wider font-bold text-white/50">#{story.id}</span>
@@ -57,7 +58,7 @@ function StoryCard({ story, onEdit, onDelete, isDragging }) {
           <span className={`text-[10px] uppercase tracking-wider font-bold px-2 py-1 rounded ${PRIORITY_COLORS[story.priority] || 'text-white/60 bg-white/10'}`}>
             {story.priority}
           </span>
-          <span {...attributes} {...listeners} className="cursor-grab text-white/30 hover:text-white/60 text-lg leading-none select-none">⠿</span>
+          <span {...attributes} {...listeners} className="cursor-grab text-white/30 hover:text-white/60 text-lg leading-none select-none" aria-label="Déplacer la carte">⠿</span>
         </div>
       </div>
 
@@ -68,8 +69,8 @@ function StoryCard({ story, onEdit, onDelete, isDragging }) {
       )}
 
       <div className="flex flex-col gap-2">
-        <button onClick={() => onEdit(story)} className="w-full glass-button text-xs min-h-[36px]">Edit</button>
-        <button onClick={() => onDelete(story.id)} className="w-full bg-red-500/20 border border-red-500/30 text-red-400 rounded-xl px-3 py-1 text-xs hover:bg-red-500/30 transition-all min-h-[36px]">Delete</button>
+        <button onClick={() => onEdit(story)} aria-label={`Modifier : ${story.title}`} className="w-full glass-button text-xs min-h-[36px]">Modifier</button>
+        <button onClick={() => onDelete(story.id)} aria-label={`Supprimer : ${story.title}`} className="w-full bg-red-500/20 border border-red-500/30 text-red-400 rounded-xl px-3 py-1 text-xs hover:bg-red-500/30 transition-all min-h-[36px]">Supprimer</button>
       </div>
     </div>
   );
@@ -80,11 +81,11 @@ function KanbanColumn({ column, stories, onEdit, onDelete, activeId }) {
   return (
     <div className="flex flex-col">
       <div className="glass-card p-3 mb-3">
-        <h2 className={`text-sm font-bold ${column.color}`}>{column.label}</h2>
-        <span className="text-xs text-white/40">{stories.length}</span>
+        <h2 className={`text-sm font-bold ${column.color}`} id={`col-${column.id}`}>{column.label}</h2>
+        <span className="text-xs text-white/40" aria-label={`${stories.length} tâches`}>{stories.length}</span>
       </div>
       <SortableContext items={stories.map(s => s.id)} strategy={verticalListSortingStrategy}>
-        <div ref={setNodeRef} className="space-y-3 min-h-[60px]">
+        <div ref={setNodeRef} className="space-y-3 min-h-[60px]" role="list" aria-labelledby={`col-${column.id}`}>
           {stories.map(story => (
             <StoryCard
               key={story.id}
@@ -293,40 +294,43 @@ export default function Dashboard() {
           <div
             className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
             onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-title"
           >
             <div className="glass-card w-full max-w-lg p-4 sm:p-6 relative">
-              <button onClick={closeModal} className="absolute top-4 right-4 text-white/60 hover:text-white text-2xl leading-none" aria-label="Fermer">×</button>
-              <h2 className="text-lg font-bold mb-4">{editId ? 'Modifier' : 'Nouvelle'} User Story</h2>
+              <button onClick={closeModal} className="absolute top-4 right-4 text-white/60 hover:text-white text-2xl leading-none" aria-label="Fermer la modale">×</button>
+              <h2 id="modal-title" className="text-lg font-bold mb-4">{editId ? 'Modifier' : 'Nouvelle'} User Story</h2>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                 <div>
-                  <label className="block text-sm font-medium mb-2">En tant que</label>
-                  <input type="text" value={formData.asA} onChange={(e) => setFormData({...formData, asA: e.target.value})} className="glass-input w-full" placeholder="utilisateur, admin..." required />
-                  {formErrors.asA && <p className="text-red-400 text-xs mt-1">{formErrors.asA}</p>}
+                  <label htmlFor="us-asa" className="block text-sm font-medium mb-2">En tant que</label>
+                  <input id="us-asa" type="text" value={formData.asA} onChange={(e) => setFormData({...formData, asA: e.target.value})} className="glass-input w-full" placeholder="utilisateur, admin..." aria-describedby={formErrors.asA ? 'asa-error' : undefined} aria-invalid={!!formErrors.asA} required />
+                  {formErrors.asA && <p id="asa-error" className="text-red-400 text-xs mt-1" role="alert">{formErrors.asA}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Je veux</label>
-                  <textarea value={formData.iWant} onChange={(e) => setFormData({...formData, iWant: e.target.value})} className="glass-input w-full min-h-[80px]" rows="3" required />
-                  {formErrors.iWant && <p className="text-red-400 text-xs mt-1">{formErrors.iWant}</p>}
+                  <label htmlFor="us-iwant" className="block text-sm font-medium mb-2">Je veux</label>
+                  <textarea id="us-iwant" value={formData.iWant} onChange={(e) => setFormData({...formData, iWant: e.target.value})} className="glass-input w-full min-h-[80px]" rows="3" aria-describedby={formErrors.iWant ? 'iwant-error' : undefined} aria-invalid={!!formErrors.iWant} required />
+                  {formErrors.iWant && <p id="iwant-error" className="text-red-400 text-xs mt-1" role="alert">{formErrors.iWant}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Afin de</label>
-                  <textarea value={formData.soThat} onChange={(e) => setFormData({...formData, soThat: e.target.value})} className="glass-input w-full min-h-[80px]" rows="3" required />
-                  {formErrors.soThat && <p className="text-red-400 text-xs mt-1">{formErrors.soThat}</p>}
+                  <label htmlFor="us-sothat" className="block text-sm font-medium mb-2">Afin de</label>
+                  <textarea id="us-sothat" value={formData.soThat} onChange={(e) => setFormData({...formData, soThat: e.target.value})} className="glass-input w-full min-h-[80px]" rows="3" aria-describedby={formErrors.soThat ? 'sothat-error' : undefined} aria-invalid={!!formErrors.soThat} required />
+                  {formErrors.soThat && <p id="sothat-error" className="text-red-400 text-xs mt-1" role="alert">{formErrors.soThat}</p>}
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">Priorité</label>
-                    <select value={formData.priority} onChange={(e) => setFormData({...formData, priority: e.target.value})} className="glass-input w-full">
+                    <label htmlFor="us-priority" className="block text-sm font-medium mb-2">Priorité</label>
+                    <select id="us-priority" value={formData.priority} onChange={(e) => setFormData({...formData, priority: e.target.value})} className="glass-input w-full">
                       <option value="Low">Low</option>
                       <option value="Medium">Medium</option>
                       <option value="High">High</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Status</label>
-                    <select value={formData.status} onChange={(e) => setFormData({...formData, status: e.target.value})} className="glass-input w-full">
+                    <label htmlFor="us-status" className="block text-sm font-medium mb-2">Status</label>
+                    <select id="us-status" value={formData.status} onChange={(e) => setFormData({...formData, status: e.target.value})} className="glass-input w-full">
                       {COLUMNS.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
                     </select>
                   </div>
