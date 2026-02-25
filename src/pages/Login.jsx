@@ -21,7 +21,7 @@ export default function Login() {
     const result = loginSchema.safeParse({ email, password });
     if (!result.success) {
       const fieldErrors = {};
-      result.error.errors.forEach(err => { fieldErrors[err.path[0]] = err.message; });
+      result.error.issues.forEach(err => { fieldErrors[err.path[0]] = err.message; });
       setErrors(fieldErrors);
       return;
     }

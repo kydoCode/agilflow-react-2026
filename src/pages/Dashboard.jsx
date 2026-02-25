@@ -149,7 +149,7 @@ export default function Dashboard() {
     const result = userStorySchema.safeParse(formData);
     if (!result.success) {
       const errs = {};
-      result.error.errors.forEach(err => { errs[err.path[0]] = err.message; });
+      result.error.issues.forEach(err => { if (err.path[0]) errs[err.path[0]] = err.message; });
       setFormErrors(errs);
       return;
     }

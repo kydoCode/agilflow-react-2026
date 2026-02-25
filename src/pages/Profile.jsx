@@ -29,7 +29,7 @@ export default function Profile() {
 
     const result = changePasswordSchema.safeParse({ oldPassword, newPassword, confirmPassword });
     if (!result.success) {
-      setError(result.error.errors[0].message);
+      setError(result.error.issues[0].message);
       return;
     }
 

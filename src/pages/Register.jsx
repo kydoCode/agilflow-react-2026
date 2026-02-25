@@ -23,7 +23,7 @@ export default function Register() {
     const result = registerSchema.safeParse({ name, email, password, role });
     if (!result.success) {
       const fieldErrors = {};
-      result.error.errors.forEach(err => { fieldErrors[err.path[0]] = err.message; });
+      result.error.issues.forEach(err => { fieldErrors[err.path[0]] = err.message; });
       setErrors(fieldErrors);
       return;
     }
