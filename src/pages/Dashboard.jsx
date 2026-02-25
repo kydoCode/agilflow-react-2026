@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { userStorySchema } from '../schemas/userstory.schema';
+import { analytics } from '../analytics';
 import {
   DndContext,
   DragOverlay,
@@ -163,9 +164,11 @@ export default function Dashboard() {
     try {
       if (editId) {
         await api.updateUserStory(token, editId, payload);
+        analytics.userStoryUpdate();
         toast.success('User Story modifiée');
       } else {
         await api.createUserStory(token, payload);
+        analytics.userStoryCreate();
         toast.success('User Story créée');
       }
       closeModal();
@@ -193,6 +196,7 @@ export default function Dashboard() {
     if (!confirm('Supprimer cette User Story ?')) return;
     try {
       await api.deleteUserStory(token, id);
+      analytics.userStoryDelete();
       toast.success('User Story supprimée');
       loadStories();
     } catch (err) {
@@ -223,6 +227,7 @@ export default function Dashboard() {
 
     try {
       await api.updateStoryStatus(token, active.id, targetStatus, 0);
+      analytics.kanbanDrag(draggedStory.status, targetStatus);
     } catch (err) {
       setStories(previousStories);
       toast.error('Erreur lors du déplacement');

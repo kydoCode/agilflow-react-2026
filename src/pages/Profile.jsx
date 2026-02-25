@@ -118,50 +118,56 @@ export default function Profile() {
               Modifier le mot de passe
             </button>
           ) : (
-            <form onSubmit={handlePasswordChange} className="space-y-4">
+            <form onSubmit={handlePasswordChange} className="space-y-4" noValidate>
               <div>
-                <label className="block text-sm font-medium mb-2">Ancien mot de passe</label>
+                <label htmlFor="old-password" className="block text-sm font-medium mb-2">Ancien mot de passe</label>
                 <input
+                  id="old-password"
                   type="password"
                   value={oldPassword}
                   onChange={(e) => setOldPassword(e.target.value)}
                   className="glass-input w-full"
+                  autoComplete="current-password"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Nouveau mot de passe</label>
+                <label htmlFor="new-password" className="block text-sm font-medium mb-2">Nouveau mot de passe</label>
                 <input
+                  id="new-password"
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   className="glass-input w-full"
+                  autoComplete="new-password"
                   minLength="6"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Confirmer le mot de passe</label>
+                <label htmlFor="confirm-password" className="block text-sm font-medium mb-2">Confirmer le mot de passe</label>
                 <input
+                  id="confirm-password"
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className="glass-input w-full"
+                  autoComplete="new-password"
                   minLength="6"
                   required
                 />
               </div>
 
               {error && (
-                <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3 text-sm text-red-400">
+                <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3 text-sm text-red-400" role="alert">
                   {error}
                 </div>
               )}
 
               {success && (
-                <div className="bg-green-500/20 border border-green-500/50 rounded-lg p-3 text-sm text-green-400">
+                <div className="bg-green-500/20 border border-green-500/50 rounded-lg p-3 text-sm text-green-400" role="status">
                   {success}
                 </div>
               )}
