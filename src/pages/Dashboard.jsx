@@ -25,11 +25,11 @@ import Footer from '../components/Footer';
 
 const COLUMNS = [
   { id: 'BACKLOG',  label: 'Backlog',   color: 'text-white/50' },
-  { id: 'TO_DO',   label: 'To Do',     color: 'text-blue-400' },
-  { id: 'DOING',   label: 'Doing',     color: 'text-yellow-400' },
-  { id: 'TO_TEST', label: 'To Test',   color: 'text-purple-400' },
-  { id: 'ISSUE',   label: 'Issue',     color: 'text-red-400' },
-  { id: 'DONE',    label: 'Done',      color: 'text-green-400' },
+  { id: 'TO_DO',   label: 'To Do',     color: 'text-sky-400' },
+  { id: 'DOING',   label: 'Doing',     color: 'text-amber-400' },
+  { id: 'TO_TEST', label: 'To Test',   color: 'text-violet-400' },
+  { id: 'ISSUE',   label: 'Issue',     color: 'text-rose-400' },
+  { id: 'DONE',    label: 'Done',      color: 'text-teal-400' },
 ];
 
 const PRIORITY_ORDER = { High: 0, Medium: 1, Low: 2 };
