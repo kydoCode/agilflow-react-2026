@@ -1,0 +1,67 @@
+name: Neon Branch on PR
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  create-db-branch:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Create Neon Branch
+        id: create-branch
+        run: |
+          echo "🚀 Création branche DB pour PR #${{ github.event.number }}"
+          
+          RESPONSE=$(curl -s -X POST \
+            "https://console.neon.tech/api/v2/projects/${{ secrets.NEON_PROJECT_ID }}/branches" \
+            -H "Authorization: Bearer ${{ secrets.NEON_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "branch": {
+                "name": "pr-${{ github.event.number }}",
+                "parent_id": "main"
+              }
+            }')
+          
+          echo "$RESPONSE" | jq '.'
+          
+          DB_URL=$(echo $RESPONSE | jq -r '.connection_uris[0].connection_uri')
+          
+          if [ "$DB_URL" = "null" ] || [ -z "$DB_URL" ]; then
+            echo "❌ Erreur création branche"
+            exit 1
+          fi
+          
+          echo "NEW_DB_URL=$DB_URL" >> $GITHUB_ENV
+          echo "✅ Branche créée: pr-${{ github.event.number }}"
+
+      - name: Comment PR with DB URL
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            ## 🗄️ Base de données éphémère créée !
+            
+            **Branche Neon** : `pr-${{ github.event.number }}`
+            
+            **Connection String** :
+            ```
+            ${{ env.NEW_DB_URL }}
+            ```
+            
+            ### 🧪 Pour tester localement :
+            
+            1. Copier l'URL ci-dessus
+            2. Dans ton `.env` local :
+               ```bash
+               DATABASE_URL="<URL_CI_DESSUS>"
+               ```
+            3. Lancer ton app :
+               ```bash
+               npm run dev
+               ```
+            
+            ⚠️ Cette branche sera **automatiquement supprimée** à la fermeture de la PR.
+            
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

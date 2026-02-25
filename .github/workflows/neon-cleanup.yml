@@ -1,0 +1,48 @@
+name: Neon Cleanup on PR Close
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  delete-db-branch:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Delete Neon Branch
+        run: |
+          BRANCH_NAME="pr-${{ github.event.number }}"
+          
+          echo "🗑️ Suppression branche DB: $BRANCH_NAME"
+          
+          # Récupérer liste des branches
+          BRANCHES=$(curl -s \
+            "https://console.neon.tech/api/v2/projects/${{ secrets.NEON_PROJECT_ID }}/branches" \
+            -H "Authorization: Bearer ${{ secrets.NEON_API_KEY }}")
+          
+          # Trouver l'ID de la branche
+          BRANCH_ID=$(echo $BRANCHES | jq -r ".branches[] | select(.name==\"$BRANCH_NAME\") | .id")
+          
+          if [ -z "$BRANCH_ID" ] || [ "$BRANCH_ID" = "null" ]; then
+            echo "⚠️ Branche $BRANCH_NAME introuvable (déjà supprimée ?)"
+            exit 0
+          fi
+          
+          # Supprimer la branche
+          DELETE_RESPONSE=$(curl -s -X DELETE \
+            "https://console.neon.tech/api/v2/projects/${{ secrets.NEON_PROJECT_ID }}/branches/$BRANCH_ID" \
+            -H "Authorization: Bearer ${{ secrets.NEON_API_KEY }}")
+          
+          echo "✅ Branche $BRANCH_NAME supprimée"
+          
+      - name: Comment PR
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            ## 🗑️ Branche DB nettoyée
+            
+            La branche Neon `pr-${{ github.event.number }}` a été supprimée.
+            
+            Quota disponible restauré ✅
+            
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
