@@ -218,13 +218,14 @@ export default function Dashboard() {
     if (draggedStory.status === targetStatus) return;
 
     // Update optimiste
+    const previousStories = stories;
     setStories(prev => prev.map(s => s.id === active.id ? { ...s, status: targetStatus } : s));
 
     try {
       await api.updateStoryStatus(token, active.id, targetStatus, 0);
     } catch (err) {
+      setStories(previousStories);
       toast.error('Erreur lors du déplacement');
-      loadStories();
     }
   };
 
@@ -264,7 +265,7 @@ export default function Dashboard() {
                   column={col}
                   stories={stories.filter(s => s.status === col.id).sort((a, b) => {
                     const pd = PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority];
-                    return pd !== 0 ? pd : a.id - b.id;
+                    return pd !== 0 ? pd : b.id - a.id;
                   })}
                   onEdit={handleEdit}
                   onDelete={handleDelete}
