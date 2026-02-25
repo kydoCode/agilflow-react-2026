@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { userStorySchema } from '../schemas/userstory.schema';
 import {
   DndContext,
   DragOverlay,
   PointerSensor,
   useSensor,
   useSensors,
-  closestCorners
+  closestCorners,
+  useDroppable
 } from '@dnd-kit/core';
 import {
   SortableContext,
@@ -28,6 +30,8 @@ const COLUMNS = [
   { id: 'ISSUE',   label: 'Issue',     color: 'text-red-400' },
   { id: 'DONE',    label: 'Done',      color: 'text-green-400' },
 ];
+
+const PRIORITY_ORDER = { High: 0, Medium: 1, Low: 2 };
 
 const PRIORITY_COLORS = {
   High:   'text-red-400 bg-red-500/10',
@@ -71,6 +75,7 @@ function StoryCard({ story, onEdit, onDelete, isDragging }) {
 }
 
 function KanbanColumn({ column, stories, onEdit, onDelete, activeId }) {
+  const { setNodeRef } = useDroppable({ id: column.id });
   return (
     <div className="flex flex-col">
       <div className="glass-card p-3 mb-3">
@@ -78,7 +83,7 @@ function KanbanColumn({ column, stories, onEdit, onDelete, activeId }) {
         <span className="text-xs text-white/40">{stories.length}</span>
       </div>
       <SortableContext items={stories.map(s => s.id)} strategy={verticalListSortingStrategy}>
-        <div className="space-y-3 min-h-[60px]">
+        <div ref={setNodeRef} className="space-y-3 min-h-[60px]">
           {stories.map(story => (
             <StoryCard
               key={story.id}
@@ -99,6 +104,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState(EMPTY_FORM);
+  const [formErrors, setFormErrors] = useState({});
   const [editId, setEditId] = useState(null);
   const [activeId, setActiveId] = useState(null);
 
@@ -133,10 +139,21 @@ export default function Dashboard() {
     setShowModal(false);
     setEditId(null);
     setFormData(EMPTY_FORM);
+    setFormErrors({});
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setFormErrors({});
+
+    const result = userStorySchema.safeParse(formData);
+    if (!result.success) {
+      const errs = {};
+      result.error.issues.forEach(err => { if (err.path[0]) errs[err.path[0]] = err.message; });
+      setFormErrors(errs);
+      return;
+    }
+
     const payload = {
       title: `En tant que ${formData.asA}, je veux ${formData.iWant}`,
       description: `Afin de ${formData.soThat}`,
@@ -194,19 +211,21 @@ export default function Dashboard() {
 
     // Trouver la colonne cible (over peut être une story ou une colonne)
     const targetStory = stories.find(s => s.id === over.id);
-    const targetStatus = targetStory ? targetStory.status : over.id;
+    const isColumn = COLUMNS.find(c => c.id === over.id);
+    const targetStatus = isColumn ? over.id : (targetStory ? targetStory.status : over.id);
 
     if (!COLUMNS.find(c => c.id === targetStatus)) return;
     if (draggedStory.status === targetStatus) return;
 
     // Update optimiste
+    const previousStories = stories;
     setStories(prev => prev.map(s => s.id === active.id ? { ...s, status: targetStatus } : s));
 
     try {
       await api.updateStoryStatus(token, active.id, targetStatus, 0);
     } catch (err) {
+      setStories(previousStories);
       toast.error('Erreur lors du déplacement');
-      loadStories();
     }
   };
 
@@ -244,7 +263,10 @@ export default function Dashboard() {
                 <KanbanColumn
                   key={col.id}
                   column={col}
-                  stories={stories.filter(s => s.status === col.id).sort((a, b) => a.position - b.position)}
+                  stories={stories.filter(s => s.status === col.id).sort((a, b) => {
+                    const pd = PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority];
+                    return pd !== 0 ? pd : b.id - a.id;
+                  })}
                   onEdit={handleEdit}
                   onDelete={handleDelete}
                   activeId={activeId}
@@ -275,14 +297,17 @@ export default function Dashboard() {
                 <div>
                   <label className="block text-sm font-medium mb-2">En tant que</label>
                   <input type="text" value={formData.asA} onChange={(e) => setFormData({...formData, asA: e.target.value})} className="glass-input w-full" placeholder="utilisateur, admin..." required />
+                  {formErrors.asA && <p className="text-red-400 text-xs mt-1">{formErrors.asA}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">Je veux</label>
                   <textarea value={formData.iWant} onChange={(e) => setFormData({...formData, iWant: e.target.value})} className="glass-input w-full min-h-[80px]" rows="3" required />
+                  {formErrors.iWant && <p className="text-red-400 text-xs mt-1">{formErrors.iWant}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">Afin de</label>
                   <textarea value={formData.soThat} onChange={(e) => setFormData({...formData, soThat: e.target.value})} className="glass-input w-full min-h-[80px]" rows="3" required />
+                  {formErrors.soThat && <p className="text-red-400 text-xs mt-1">{formErrors.soThat}</p>}
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
