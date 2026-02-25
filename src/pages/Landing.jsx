@@ -1,10 +1,22 @@
 import { Link } from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
 import useAuthStore from '../store/authStore';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 export default function Landing() {
   const { user } = useAuthStore();
+  const [videoVisible, setVideoVisible] = useState(false);
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setVideoVisible(true); },
+      { threshold: 0.1 }
+    );
+    if (videoRef.current) observer.observe(videoRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -16,8 +28,10 @@ export default function Landing() {
           <div className="mb-12 sm:mb-16">
             <img 
               src="/logo.webp" 
-              alt="AgilFlow" 
-              className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-6 sm:mb-8"
+              alt="AgilFlow"
+              width="96"
+              height="96"
+              className="w-24 h-24 mx-auto mb-6 sm:mb-8"
             />
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 sm:mb-6">
               AgilFlow
@@ -70,16 +84,19 @@ export default function Landing() {
           </div>
 
           {/* Promo Video */}
-          <div className="mt-12 sm:mt-16">
+          <div className="mt-12 sm:mt-16" ref={videoRef}>
             <div className="glass-card p-2 sm:p-3 overflow-hidden">
               <div style={{ padding: '56.25% 0 0 0', position: 'relative' }}>
-                <iframe
-                  src="https://player.vimeo.com/video/1167232498?badge=0&autopause=0&player_id=0&app_id=58479"
-                  frameBorder="0"
-                  allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
-                  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-                  title="AgilFlow - Présentation"
-                />
+                {videoVisible && (
+                  <iframe
+                    src="https://player.vimeo.com/video/1167232498?badge=0&autopause=0&player_id=0&app_id=58479"
+                    frameBorder="0"
+                    allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+                    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+                    title="AgilFlow - Présentation"
+                    loading="lazy"
+                  />
+                )}
               </div>
             </div>
           </div>
