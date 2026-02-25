@@ -19,7 +19,7 @@ export default function Header() {
             <span className="text-base sm:text-lg md:text-xl font-bold text-white hidden xs:inline">AgilFlow</span>
           </Link>
 
-          <nav className="flex items-center gap-1 sm:gap-2 md:gap-4">
+          <nav aria-label="Navigation principale" className="flex items-center gap-1 sm:gap-2 md:gap-4">
             {user ? (
               <>
                 <Link
@@ -32,11 +32,12 @@ export default function Header() {
                   to="/profile"
                   className="glass-button text-xs sm:text-sm md:text-base px-2 sm:px-3 md:px-4 py-2 min-h-[44px] flex items-center justify-center"
                 >
-                  Profile
+                  Profil
                 </Link>
                 <button
                   onClick={handleLogout}
                   className="glass-button text-xs sm:text-sm md:text-base px-2 sm:px-3 md:px-4 py-2 min-h-[44px] flex items-center justify-center whitespace-nowrap"
+                  aria-label="Se déconnecter"
                 >
                   Log out
                 </button>
@@ -47,13 +48,13 @@ export default function Header() {
                   to="/login"
                   className="glass-button text-xs sm:text-sm md:text-base px-2 sm:px-3 md:px-4 py-2 min-h-[44px] flex items-center justify-center"
                 >
-                  Log in
+                  Connexion
                 </Link>
                 <Link
                   to="/register"
                   className="bg-primary text-white rounded-xl px-2 sm:px-3 md:px-4 py-2 text-xs sm:text-sm md:text-base font-semibold hover:bg-primary-dark transition-all min-h-[44px] flex items-center justify-center"
                 >
-                  Register
+                  Inscription
                 </Link>
               </>
             )}

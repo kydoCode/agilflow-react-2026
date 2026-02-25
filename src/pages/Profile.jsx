@@ -87,23 +87,22 @@ export default function Profile() {
         {/* Informations */}
         <div className="glass-card p-4 sm:p-6 mb-6 space-y-4">
           <h2 className="text-lg sm:text-xl font-bold mb-4">Informations</h2>
-          
-          <div>
-            <label className="block text-sm text-white/60 mb-1">Email</label>
-            <p className="text-white break-words">{user.email}</p>
-          </div>
-
-          <div>
-            <label className="block text-sm text-white/60 mb-1">Rôle</label>
-            <p className="text-white capitalize">{user.role}</p>
-          </div>
-
-          {user.createdAt && (
+          <dl className="space-y-4">
             <div>
-              <label className="block text-sm text-white/60 mb-1">Membre depuis</label>
-              <p className="text-white">{formatDate(user.createdAt)}</p>
+              <dt className="text-sm text-white/60 mb-1">Email</dt>
+              <dd className="text-white break-words">{user.email}</dd>
             </div>
-          )}
+            <div>
+              <dt className="text-sm text-white/60 mb-1">Rôle</dt>
+              <dd className="text-white capitalize">{user.role}</dd>
+            </div>
+            {user.createdAt && (
+              <div>
+                <dt className="text-sm text-white/60 mb-1">Membre depuis</dt>
+                <dd className="text-white">{formatDate(user.createdAt)}</dd>
+              </div>
+            )}
+          </dl>
         </div>
 
         {/* Changement mot de passe */}
@@ -119,6 +118,8 @@ export default function Profile() {
             </button>
           ) : (
             <form onSubmit={handlePasswordChange} className="space-y-4" noValidate>
+              {/* Champ email caché requis par les gestionnaires de mots de passe (WCAG 1.3.5) */}
+              <input type="email" value={user.email} autoComplete="username" readOnly className="hidden" aria-hidden="true" />
               <div>
                 <label htmlFor="old-password" className="block text-sm font-medium mb-2">Ancien mot de passe</label>
                 <input
