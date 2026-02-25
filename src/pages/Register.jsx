@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
 import api from '../services/api';
+import { registerSchema } from '../schemas/auth.schema';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -10,22 +11,30 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('teammate');
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const setAuth = useAuthStore(state => state.setAuth);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setLoading(true);
+    setErrors({});
 
+    const result = registerSchema.safeParse({ name, email, password, role });
+    if (!result.success) {
+      const fieldErrors = {};
+      result.error.errors.forEach(err => { fieldErrors[err.path[0]] = err.message; });
+      setErrors(fieldErrors);
+      return;
+    }
+
+    setLoading(true);
     try {
       const data = await api.register(name, email, password, role);
       setAuth(data.user, data.token);
       navigate('/dashboard');
     } catch (err) {
-      setError('Erreur lors de l\'inscription');
+      setErrors({ global: 'Erreur lors de l\'inscription' });
     } finally {
       setLoading(false);
     }
@@ -54,6 +63,7 @@ export default function Register() {
               className="glass-input w-full"
               required
             />
+            {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
           </div>
 
           <div>
@@ -65,6 +75,7 @@ export default function Register() {
               className="glass-input w-full"
               required
             />
+            {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email}</p>}
           </div>
 
           <div>
@@ -77,6 +88,7 @@ export default function Register() {
               minLength="6"
               required
             />
+            {errors.password && <p className="text-red-400 text-xs mt-1">{errors.password}</p>}
           </div>
 
           <div>
@@ -95,9 +107,9 @@ export default function Register() {
             </select>
           </div>
 
-          {error && (
+          {errors.global && (
             <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3 text-sm">
-              {error}
+              {errors.global}
             </div>
           )}
 

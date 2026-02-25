@@ -2,28 +2,37 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
 import api from '../services/api';
+import { loginSchema } from '../schemas/auth.schema';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const setAuth = useAuthStore(state => state.setAuth);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setLoading(true);
+    setErrors({});
 
+    const result = loginSchema.safeParse({ email, password });
+    if (!result.success) {
+      const fieldErrors = {};
+      result.error.errors.forEach(err => { fieldErrors[err.path[0]] = err.message; });
+      setErrors(fieldErrors);
+      return;
+    }
+
+    setLoading(true);
     try {
       const data = await api.login(email, password);
       setAuth(data.user, data.token);
       navigate('/dashboard');
     } catch (err) {
-      setError('Email ou mot de passe incorrect');
+      setErrors({ global: 'Email ou mot de passe incorrect' });
     } finally {
       setLoading(false);
     }
@@ -52,6 +61,7 @@ export default function Login() {
               className="glass-input w-full"
               required
             />
+            {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email}</p>}
           </div>
 
           <div>
@@ -63,11 +73,12 @@ export default function Login() {
               className="glass-input w-full"
               required
             />
+            {errors.password && <p className="text-red-400 text-xs mt-1">{errors.password}</p>}
           </div>
 
-          {error && (
+          {errors.global && (
             <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3 text-sm">
-              {error}
+              {errors.global}
             </div>
           )}
 

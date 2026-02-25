@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
 import api from '../services/api';
+import { changePasswordSchema } from '../schemas/profile.schema';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -26,13 +27,9 @@ export default function Profile() {
     setError('');
     setSuccess('');
 
-    if (newPassword !== confirmPassword) {
-      setError('Les mots de passe ne correspondent pas');
-      return;
-    }
-
-    if (newPassword.length < 6) {
-      setError('Le mot de passe doit contenir au moins 6 caractères');
+    const result = changePasswordSchema.safeParse({ oldPassword, newPassword, confirmPassword });
+    if (!result.success) {
+      setError(result.error.errors[0].message);
       return;
     }
 
@@ -43,10 +40,7 @@ export default function Profile() {
       setOldPassword('');
       setNewPassword('');
       setConfirmPassword('');
-      setTimeout(() => {
-        setShowPasswordForm(false);
-        setSuccess('');
-      }, 2000);
+      setTimeout(() => { setShowPasswordForm(false); setSuccess(''); }, 2000);
     } catch (err) {
       setError('Erreur lors du changement de mot de passe');
     } finally {

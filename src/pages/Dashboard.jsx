@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { userStorySchema } from '../schemas/userstory.schema';
 import {
   DndContext,
   DragOverlay,
@@ -29,7 +30,8 @@ const COLUMNS = [
   { id: 'DONE',    label: 'Done',      color: 'text-green-400' },
 ];
 
-const PRIORITY_COLORS = {
+const PRIORITY_ORDER = { High: 0, Medium: 1, Low: 2 };
+
   High:   'text-red-400 bg-red-500/10',
   Medium: 'text-yellow-400 bg-yellow-500/10',
   Low:    'text-green-400 bg-green-500/10',
@@ -99,6 +101,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState(EMPTY_FORM);
+  const [formErrors, setFormErrors] = useState({});
   const [editId, setEditId] = useState(null);
   const [activeId, setActiveId] = useState(null);
 
@@ -133,10 +136,21 @@ export default function Dashboard() {
     setShowModal(false);
     setEditId(null);
     setFormData(EMPTY_FORM);
+    setFormErrors({});
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setFormErrors({});
+
+    const result = userStorySchema.safeParse(formData);
+    if (!result.success) {
+      const errs = {};
+      result.error.errors.forEach(err => { errs[err.path[0]] = err.message; });
+      setFormErrors(errs);
+      return;
+    }
+
     const payload = {
       title: `En tant que ${formData.asA}, je veux ${formData.iWant}`,
       description: `Afin de ${formData.soThat}`,
@@ -244,7 +258,10 @@ export default function Dashboard() {
                 <KanbanColumn
                   key={col.id}
                   column={col}
-                  stories={stories.filter(s => s.status === col.id).sort((a, b) => a.position - b.position)}
+                  stories={stories.filter(s => s.status === col.id).sort((a, b) => {
+                    const pd = PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority];
+                    return pd !== 0 ? pd : a.id - b.id;
+                  })}
                   onEdit={handleEdit}
                   onDelete={handleDelete}
                   activeId={activeId}
@@ -275,14 +292,17 @@ export default function Dashboard() {
                 <div>
                   <label className="block text-sm font-medium mb-2">En tant que</label>
                   <input type="text" value={formData.asA} onChange={(e) => setFormData({...formData, asA: e.target.value})} className="glass-input w-full" placeholder="utilisateur, admin..." required />
+                  {formErrors.asA && <p className="text-red-400 text-xs mt-1">{formErrors.asA}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">Je veux</label>
                   <textarea value={formData.iWant} onChange={(e) => setFormData({...formData, iWant: e.target.value})} className="glass-input w-full min-h-[80px]" rows="3" required />
+                  {formErrors.iWant && <p className="text-red-400 text-xs mt-1">{formErrors.iWant}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">Afin de</label>
                   <textarea value={formData.soThat} onChange={(e) => setFormData({...formData, soThat: e.target.value})} className="glass-input w-full min-h-[80px]" rows="3" required />
+                  {formErrors.soThat && <p className="text-red-400 text-xs mt-1">{formErrors.soThat}</p>}
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
