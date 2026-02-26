@@ -85,19 +85,19 @@ export default function Landing() {
 
           {/* Promo Video */}
           <div className="mt-12 sm:mt-16" ref={videoRef}>
-            <div className="glass-card p-2 sm:p-3 overflow-hidden">
-              <div style={{ padding: '56.25% 0 0 0', position: 'relative' }}>
-                {videoVisible && (
-                  <iframe
-                    src="https://player.vimeo.com/video/1167232498?badge=0&autopause=0&player_id=0&app_id=58479"
-                    frameBorder="0"
-                    allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
-                    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-                    title="AgilFlow - Présentation"
-                    loading="lazy"
-                  />
-                )}
-              </div>
+            <div className="glass-card p-2 sm:p-3">
+              {videoVisible && (
+                <video
+                  controls
+                  controlsList="nodownload"
+                  preload="none"
+                  width="100%"
+                  style={{ borderRadius: '8px' }}
+                  poster="https://res.cloudinary.com/dt4wkkoya/image/upload/v1772071738/AgilFlow%20%7C%20Product%20Showcase%202026%20%28Official%29_poster.jpg"
+                >
+                  <source src="https://res.cloudinary.com/dt4wkkoya/video/upload/q_auto,f_auto/v1772070755/AgilFlow%20%7C%20Product%20Showcase%202026%20%28Official%29.mp4" type="video/mp4" />
+                </video>
+              )}
             </div>
           </div>
 
