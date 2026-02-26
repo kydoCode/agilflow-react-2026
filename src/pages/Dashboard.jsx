@@ -40,7 +40,7 @@ const PRIORITY_COLORS = {
   Low:    'text-green-400 bg-green-500/10',
 };
 
-const EMPTY_FORM = { asA: '', iWant: '', soThat: '', priority: 'Medium', status: 'BACKLOG' };
+const EMPTY_FORM = { asA: '', iWant: '', soThat: '', priority: 'Medium', status: 'BACKLOG', storyPoints: null };
 
 function StoryCard({ story, onEdit, onDelete, isDragging }) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: story.id });
@@ -58,6 +58,9 @@ function StoryCard({ story, onEdit, onDelete, isDragging }) {
           <span className={`text-[10px] uppercase tracking-wider font-bold px-2 py-1 rounded ${PRIORITY_COLORS[story.priority] || 'text-white/60 bg-white/10'}`}>
             {story.priority}
           </span>
+          {story.storyPoints != null && (
+            <span className="text-[10px] font-bold px-2 py-1 rounded bg-[#0D8B7D]/20 text-[#0D8B7D] border border-[#0D8B7D]/30">{story.storyPoints}pt</span>
+          )}
           <span {...attributes} {...listeners} className="cursor-grab text-white/30 hover:text-white/60 text-lg leading-none select-none" aria-label="Déplacer la carte">⠿</span>
         </div>
       </div>
@@ -82,7 +85,12 @@ function KanbanColumn({ column, stories, onEdit, onDelete, activeId }) {
     <div className="flex flex-col">
       <div className="glass-card p-3 mb-3">
         <h2 className={`text-sm font-bold ${column.color}`} id={`col-${column.id}`}>{column.label}</h2>
-        <span className="text-xs text-white/40" aria-label={`${stories.length} tâches`}>{stories.length}</span>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-white/40" aria-label={`${stories.length} tâches`}>{stories.length}</span>
+          {stories.some(s => s.storyPoints != null) && (
+            <span className="text-xs text-[#0D8B7D] font-semibold">{stories.reduce((sum, s) => sum + (s.storyPoints || 0), 0)}pts</span>
+          )}
+        </div>
       </div>
       <SortableContext items={stories.map(s => s.id)} strategy={verticalListSortingStrategy}>
         <div ref={setNodeRef} className="space-y-3 min-h-[60px]" role="list" aria-labelledby={`col-${column.id}`}>
@@ -199,7 +207,8 @@ export default function Dashboard() {
       title: `En tant que ${formData.asA}, je veux ${formData.iWant}`,
       description: `Afin de ${formData.soThat}`,
       priority: formData.priority,
-      status: formData.status
+      status: formData.status,
+      storyPoints: formData.storyPoints
     };
     try {
       if (editId) {
@@ -226,7 +235,8 @@ export default function Dashboard() {
       iWant:    titleMatch ? titleMatch[2] : story.title,
       soThat:   descMatch  ? descMatch[1]  : story.description || '',
       priority: story.priority,
-      status:   story.status
+      status:   story.status,
+      storyPoints: story.storyPoints ?? null
     });
     setEditId(story.id);
     setShowModal(true);
@@ -375,7 +385,7 @@ export default function Dashboard() {
             aria-modal="true"
             aria-labelledby="modal-title"
           >
-            <div className="glass-card w-full max-w-lg p-4 sm:p-6 relative">
+            <div className="glass-card w-full max-w-lg p-4 sm:p-6 relative overflow-y-auto max-h-[90vh]">
               <button onClick={closeModal} className="absolute top-4 right-4 text-white/60 hover:text-white text-2xl leading-none" aria-label="Fermer la modale">×</button>
               <h2 id="modal-title" className="text-lg font-bold mb-4">{editId ? 'Modifier' : 'Nouvelle'} User Story</h2>
 
@@ -411,6 +421,14 @@ export default function Dashboard() {
                       {COLUMNS.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
                     </select>
                   </div>
+                </div>
+
+                <div>
+                  <label htmlFor="us-points" className="block text-sm font-medium mb-2">Story Points</label>
+                  <select id="us-points" value={formData.storyPoints ?? ''} onChange={(e) => setFormData({...formData, storyPoints: e.target.value ? parseInt(e.target.value) : null})} className="glass-input w-full">
+                    <option value="">— Non estimé</option>
+                    {[1,2,3,5,8,13,21].map(n => <option key={n} value={n}>{n}</option>)}
+                  </select>
                 </div>
 
                 <div className="flex gap-3 pt-4">
