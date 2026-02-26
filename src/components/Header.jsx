@@ -15,7 +15,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
         <div className="flex items-center justify-between gap-2">
           <Link to="/" className="flex items-center gap-2 shrink-0">
-            <img src="/logo.webp" alt="AgilFlow" className="w-8 h-8 sm:w-10 sm:h-10" />
+            <img src="/logo.webp" alt="AgilFlow" width="40" height="40" className="size-10" />
             <span className="text-base sm:text-lg md:text-xl font-bold text-white hidden xs:inline">AgilFlow</span>
           </Link>
 
@@ -37,9 +37,8 @@ export default function Header() {
                 <button
                   onClick={handleLogout}
                   className="glass-button text-xs sm:text-sm md:text-base px-2 sm:px-3 md:px-4 py-2 min-h-[44px] flex items-center justify-center whitespace-nowrap"
-                  aria-label="Se déconnecter"
                 >
-                  Log out
+                  Se déconnecter
                 </button>
               </>
             ) : (

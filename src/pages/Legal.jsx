@@ -1,8 +1,11 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 export default function Legal() {
+  useEffect(() => { window.scrollTo(0, 0); }, []);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -10,7 +13,7 @@ export default function Legal() {
       <main className="flex-1 px-4 py-8 sm:py-12">
         <div className="max-w-4xl mx-auto">
           <div className="glass-card p-6 sm:p-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-6">Mentions légales</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-6 text-center">Mentions légales</h1>
             
             <div className="space-y-6 text-white/80">
               <section>
