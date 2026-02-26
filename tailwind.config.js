@@ -8,9 +8,9 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#3B82F6',
-          light: '#60A5FA',
-          dark: '#1D4ED8',
+          DEFAULT: '#1D4ED8',
+          light: '#3B82F6',
+          dark: '#1E40AF',
         },
         accent: '#10B981',
         glass: {
