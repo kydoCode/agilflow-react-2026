@@ -52,16 +52,16 @@ function StoryCard({ story, onEdit, onDelete, isDragging }) {
       className="relative group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 shadow-2xl hover:border-white/20 hover:bg-white/10 transition-all"
       role="listitem"
     >
-      <div className="flex justify-between items-start gap-2 mb-3">
-        <span className="text-[10px] uppercase tracking-wider font-bold text-white/50">#{story.id}</span>
-        <div className="flex items-center gap-2">
-          <span className={`text-[10px] uppercase tracking-wider font-bold px-2 py-1 rounded ${PRIORITY_COLORS[story.priority] || 'text-white/60 bg-white/10'}`}>
+      <div className="flex justify-between items-start gap-2 mb-3 min-w-0">
+        <span className="text-[10px] uppercase tracking-wider font-bold text-white/50 shrink-0">#{story.id}</span>
+        <div className="flex items-center gap-1 flex-wrap justify-end">
+          <span className={`text-[10px] uppercase tracking-wider font-bold px-2 py-1 rounded shrink-0 ${PRIORITY_COLORS[story.priority] || 'text-white/60 bg-white/10'}`}>
             {story.priority}
           </span>
           {story.storyPoints != null && (
-            <span className="text-[10px] font-bold px-2 py-1 rounded bg-[#0D8B7D]/20 text-[#0D8B7D] border border-[#0D8B7D]/30">{story.storyPoints}pt</span>
+            <span className="text-[10px] font-bold px-2 py-1 rounded bg-[#0D8B7D]/20 text-[#0D8B7D] border border-[#0D8B7D]/30 shrink-0">{story.storyPoints}pt</span>
           )}
-          <span {...attributes} {...listeners} className="cursor-grab text-white/30 hover:text-white/60 text-lg leading-none select-none" aria-label="Déplacer la carte">⠿</span>
+          <span {...attributes} {...listeners} className="cursor-grab text-white/30 hover:text-white/60 text-lg leading-none select-none shrink-0" aria-label="Déplacer la carte">⠿</span>
         </div>
       </div>
 
