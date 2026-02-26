@@ -32,7 +32,7 @@ export default function ResetPassword() {
     }
     setLoading(true);
     try {
-      const response = await fetch('/api/password-reset/reset', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/password-reset/reset`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token, password: formData.password })

@@ -18,7 +18,7 @@ export default function ForgotPassword() {
     try {
       forgotSchema.parse({ email });
       setLoading(true);
-      const response = await fetch('/api/password-reset/forgot', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/password-reset/forgot`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
