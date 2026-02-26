@@ -109,6 +109,10 @@ export default function Dashboard() {
   const [formErrors, setFormErrors] = useState({});
   const [editId, setEditId] = useState(null);
   const [activeId, setActiveId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [priorityFilter, setPriorityFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [filteredStories, setFilteredStories] = useState([]);
 
   const { user, token, logout } = useAuthStore();
   const navigate = useNavigate();
@@ -126,16 +130,51 @@ export default function Dashboard() {
     return () => document.removeEventListener('keydown', handleEscape);
   }, [token, navigate, showModal]);
 
+  // Filtrage avec debounce
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      let filtered = stories;
+      
+      if (searchTerm) {
+        filtered = filtered.filter(story => 
+          story.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (story.description && story.description.toLowerCase().includes(searchTerm.toLowerCase()))
+        );
+      }
+      
+      if (priorityFilter) {
+        filtered = filtered.filter(story => story.priority === priorityFilter);
+      }
+      
+      if (statusFilter) {
+        filtered = filtered.filter(story => story.status === statusFilter);
+      }
+      
+      setFilteredStories(filtered);
+    }, 300);
+    
+    return () => clearTimeout(timer);
+  }, [stories, searchTerm, priorityFilter, statusFilter]);
+
   const loadStories = async () => {
     try {
       const data = await api.getUserStories(token);
       setStories(data);
+      setFilteredStories(data);
     } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
     }
   };
+
+  const resetFilters = () => {
+    setSearchTerm('');
+    setPriorityFilter('');
+    setStatusFilter('');
+  };
+
+  const hasActiveFilters = searchTerm || priorityFilter || statusFilter;
 
   const closeModal = () => {
     setShowModal(false);
@@ -235,7 +274,7 @@ export default function Dashboard() {
     }
   };
 
-  const activeStory = stories.find(s => s.id === activeId);
+  const activeStory = filteredStories.find(s => s.id === activeId) || stories.find(s => s.id === activeId);
 
   if (loading) return <div className="min-h-screen flex items-center justify-center text-white">Chargement...</div>;
 
@@ -247,11 +286,12 @@ export default function Dashboard() {
         <div className="max-w-[1600px] mx-auto">
 
           <div className="glass-card p-4 sm:p-6 mb-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
               <div>
                 <h1 className="text-xl sm:text-2xl font-bold">Kanban Board</h1>
                 <p className="text-white/60 mt-1 text-sm">
                   {user?.name} <span className="text-[#0D8B7D] text-xs">({user?.role})</span>
+                  {hasActiveFilters && <span className="ml-2 text-amber-400 text-xs">({filteredStories.length} résultats)</span>}
                 </p>
               </div>
               <button
@@ -261,6 +301,43 @@ export default function Dashboard() {
                 + Add Task
               </button>
             </div>
+            
+            {/* Filtres */}
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+              <input
+                type="text"
+                placeholder="Rechercher..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="glass-input text-sm"
+              />
+              <select
+                value={priorityFilter}
+                onChange={(e) => setPriorityFilter(e.target.value)}
+                className="glass-input text-sm"
+              >
+                <option value="">Toutes priorités</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="glass-input text-sm"
+              >
+                <option value="">Tous statuts</option>
+                {COLUMNS.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
+              </select>
+              {hasActiveFilters && (
+                <button
+                  onClick={resetFilters}
+                  className="glass-button text-sm min-h-[36px]"
+                >
+                  Reset
+                </button>
+              )}
+            </div>
           </div>
 
           <DndContext sensors={sensors} collisionDetection={closestCorners} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
@@ -269,7 +346,7 @@ export default function Dashboard() {
                 <KanbanColumn
                   key={col.id}
                   column={col}
-                  stories={stories.filter(s => s.status === col.id).sort((a, b) => {
+                  stories={filteredStories.filter(s => s.status === col.id).sort((a, b) => {
                     const pd = PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority];
                     return pd !== 0 ? pd : b.id - a.id;
                   })}

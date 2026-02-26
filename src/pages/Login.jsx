@@ -47,7 +47,7 @@ export default function Login() {
       <main className="flex-1 flex items-center justify-center p-4">
       <div className="glass-card w-full max-w-md p-8">
         <div className="flex items-center justify-center gap-3 mb-8">
-          <img src="/logo.webp" alt="AgilFlow" width="48" height="48" className="size-12" />
+          <img src="/logo.png" alt="AgilFlow" width="48" height="48" className="size-12" />
           <h1 className="text-2xl sm:text-3xl font-bold text-white">
             AgilFlow
           </h1>
@@ -105,6 +105,12 @@ export default function Login() {
           Pas encore de compte ?{' '}
           <Link to="/register" className="text-primary-light hover:underline">
             S'inscrire
+          </Link>
+        </p>
+        
+        <p className="text-center mt-2 text-sm text-white/60">
+          <Link to="/forgot-password" className="text-primary-light hover:underline">
+            Mot de passe oublié ?
           </Link>
         </p>
       </div>

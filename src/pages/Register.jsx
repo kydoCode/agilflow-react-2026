@@ -49,7 +49,7 @@ export default function Register() {
       <main className="flex-1 flex items-center justify-center p-4">
       <div className="glass-card w-full max-w-md p-8">
         <div className="flex items-center justify-center gap-3 mb-8">
-          <img src="/logo.webp" alt="AgilFlow" width="48" height="48" className="size-12" />
+          <img src="/logo.png" alt="AgilFlow" width="48" height="48" className="size-12" />
           <h1 className="text-2xl sm:text-3xl font-bold text-white">
             AgilFlow
           </h1>

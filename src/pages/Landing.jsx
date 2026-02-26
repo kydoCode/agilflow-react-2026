@@ -27,7 +27,7 @@ export default function Landing() {
           {/* Hero */}
           <div className="mb-12 sm:mb-16">
             <img 
-              src="/logo.webp" 
+              src="/logo.png" 
               alt="AgilFlow"
               width="96"
               height="96"
