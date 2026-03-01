@@ -44,6 +44,7 @@ const EMPTY_FORM = { asA: '', iWant: '', soThat: '', priority: 'Medium', status:
 
 function StoryCard({ story, onEdit, onDelete, isDragging }) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: story.id });
+  const [expanded, setExpanded] = useState(false);
 
   return (
     <div
@@ -59,17 +60,18 @@ function StoryCard({ story, onEdit, onDelete, isDragging }) {
             {story.priority}
           </span>
           {story.storyPoints != null && (
-            <span className="text-[10px] font-bold px-2 py-1 rounded bg-[#0D8B7D]/20 text-[#0D8B7D] border border-[#0D8B7D]/30 shrink-0">{story.storyPoints}pt</span>
+            <span className="text-[10px] font-bold px-2 py-1 rounded bg-[#0D8B7D]/20 text-[#0D8B7D] border border-[#0D8B7D]/30 shrink-0">{story.storyPoints}{story.storyPoints === 1 ? 'pt' : 'pts'}</span>
           )}
           <span {...attributes} {...listeners} className="cursor-grab text-white/30 hover:text-white/60 text-lg leading-none select-none shrink-0" aria-label="Déplacer la carte">⠿</span>
         </div>
       </div>
 
-      <h3 className="text-sm font-semibold text-white/90 break-words mb-2 line-clamp-2">{story.title}</h3>
-
-      {story.description && (
-        <p className="text-xs text-white/50 mb-3 break-words line-clamp-2">{story.description}</p>
-      )}
+      <button onClick={() => setExpanded(v => !v)} className="w-full text-left">
+        <h3 className={`text-sm font-semibold text-white/90 break-words mb-2 ${expanded ? '' : 'line-clamp-2'}`}>{story.title}</h3>
+        {story.description && (
+          <p className={`text-xs text-white/50 mb-3 break-words ${expanded ? '' : 'line-clamp-2'}`}>{story.description}</p>
+        )}
+      </button>
 
       <div className="flex flex-col gap-2">
         <button onClick={() => onEdit(story)} aria-label={`Modifier : ${story.title}`} className="w-full glass-button text-xs min-h-[36px]">Modifier</button>
